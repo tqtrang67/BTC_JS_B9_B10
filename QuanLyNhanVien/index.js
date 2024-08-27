@@ -7,7 +7,7 @@ DSNV = dataArray.map(function (item) {
 		item.tknv,
 		item.name,
 		item.email,
-		item.passWork,
+		item.passWord,
 		item.datePicker,
 		item.luongCB,
 		item.chucVu,
@@ -24,12 +24,13 @@ function themNhanVien() {
 	let isId = DSNV.some((item) => item.tknv === nv.tknv);
 	if (isId) {
 		alert("Tài khoản nhân viên đã tồn tại! Vui lòng chọn tài khoản khác.");
+		return;
 	}
 	let isValid =
 		validateTKNV(nv.tknv, "tbTKNV") &
 		validateName(nv.name, "tbTen") &
 		validateEmail(nv.email, "tbEmail") &
-		validatePassWord(nv.passWork, "tbMatKhau") &
+		validatePassWord(nv.passWord, "tbMatKhau") &
 		validateDate(nv.datePicker, "tbNgay") &
 		validateLuong(nv.luongCB, "tbLuongCB") &
 		validateChucVu(nv.chucVu, "tbChucVu") &
@@ -41,6 +42,7 @@ function themNhanVien() {
 		localStorage.setItem("DSNV_JSON", dataJson);
 		renderDSNV(DSNV);
 		resetForm();
+		$("#myModal").modal("hide");
 	}
 }
 
@@ -52,8 +54,10 @@ function suaNV(id) {
 
 	// Lấy ra đối tượng sinh viên cần sửa
 	let nv = DSNV[index];
+
 	// Hiển thị thông tin sinh viên lên form để người dùng có thể sửa
 	hienThiThongTin(nv);
+	console.log("🚀 ~ suaNV ~ nv:", nv);
 
 	// ngăn user sửa mã nv
 	document.getElementById("tknv").disabled = true;
@@ -74,22 +78,38 @@ function xoaNV(id) {
 	renderDSNV(DSNV);
 }
 
-function resetForm() {
-	document.getElementById("formDSNV").reset();
-	document.getElementById("tknv").disabled = false;
-}
-
 function capNhatNhanVien() {
 	let nv = layThongTin();
-	let index = DSNV.findIndex(function (item) {
-		return item.tknv === nv.tknv;
-	});
-	DSNV[index] = nv;
-	// cập nhật lại local storage
-	let dataJson = JSON.stringify(DSNV);
-	localStorage.setItem("DSNV_JSON", dataJson);
-	// render lại layout sau khi update data
-	renderDSNV(DSNV);
+	console.log("🚀 ~ capNhatNhanVien ~ nv:", nv.passWord);
+
+	let isValid =
+		validateName(nv.name, "tbTen") &
+		validateEmail(nv.email, "tbEmail") &
+		validatePassWord(nv.passWord, "tbMatKhau") &
+		validateDate(nv.datePicker, "tbNgay") &
+		validateLuong(nv.luongCB, "tbLuongCB") &
+		validateChucVu(nv.chucVu, "tbChucVu") &
+		validateGioLam(nv.gioLam, "tbGiolam");
+
+	if (isValid) {
+		// Tìm vị trí nhân viên trong danh sách
+		let index = DSNV.findIndex(function (item) {
+			return item.tknv === nv.tknv;
+		});
+
+		// Cập nhật thông tin nhân viên
+		DSNV[index] = nv;
+
+		// Cập nhật lại local storage
+		let dataJson = JSON.stringify(DSNV);
+		localStorage.setItem("DSNV_JSON", dataJson);
+
+		// Render lại danh sách nhân viên sau khi cập nhật
+		renderDSNV(DSNV);
+
+		// Đóng modal
+		$("#myModal").modal("hide");
+	}
 }
 
 function search() {
@@ -104,3 +124,24 @@ function search() {
 		return renderDSNV(timKiem);
 	}
 }
+
+function resetForm() {
+	document.getElementById("formDSNV").reset();
+	document.getElementById("tknv").disabled = false;
+
+	document.getElementById("tbTKNV").innerHTML = "";
+	document.getElementById("tbTen").innerHTML = "";
+	document.getElementById("tbEmail").innerHTML = "";
+	document.getElementById("tbMatKhau").innerHTML = "";
+	document.getElementById("tbNgay").innerHTML = "";
+	document.getElementById("tbLuongCB").innerHTML = "";
+	document.getElementById("tbChucVu").innerHTML = "";
+	document.getElementById("tbGiolam").innerHTML = "";
+}
+
+// reset khi đóng modal
+$(document).ready(function () {
+	$("#myModal").on("hide.bs.modal", function () {
+		resetForm();
+	});
+});

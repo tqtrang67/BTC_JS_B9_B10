@@ -8,6 +8,7 @@ function layThongTin() {
 	let luongCB = parseFloat(document.getElementById("luongCB").value * 1);
 	let chucVu = document.getElementById("chucvu").value;
 	let gioLam = parseInt(document.getElementById("gioLam").value);
+
 	let nv = new NhanVien(
 		tknv,
 		name,
@@ -18,6 +19,8 @@ function layThongTin() {
 		chucVu,
 		gioLam
 	);
+
+	console.log("🚀 ~ layThongTin ~ nv:", nv);
 	return nv;
 }
 

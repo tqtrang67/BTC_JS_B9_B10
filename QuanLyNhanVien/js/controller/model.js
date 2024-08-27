@@ -2,7 +2,7 @@ function NhanVien(
 	_tknv,
 	_name,
 	_email,
-	_passWork,
+	_passWord,
 	_datePicker,
 	_luongCB,
 	_chucVu,
@@ -11,7 +11,7 @@ function NhanVien(
 	this.tknv = _tknv;
 	this.name = _name;
 	this.email = _email;
-	this.passWork = _passWork;
+	this.passWord = _passWord;
 	this.datePicker = _datePicker;
 	this.luongCB = _luongCB;
 	this.chucVu = _chucVu;

@@ -66,7 +66,7 @@ function validateLuong(value, idErr) {
 		document.getElementById(idErr).innerHTML =
 			"Nội dung không được để trống và chỉ được nhập số";
 		return false;
-	} else if (value <= 1000000 || value >= 20000000) {
+	} else if (value < 1000000 || value > 20000000) {
 		document.getElementById(idErr).innerHTML =
 			"Lương cơ bản phải từ 1.000.000 đến 20.000.000";
 		return false;
@@ -100,9 +100,3 @@ function validateGioLam(value, idErr) {
 		return true;
 	}
 }
-// reset khi đóng modal
-$(document).ready(function () {
-	$("#myModal").on("hide.bs.modal", function () {
-		resetForm();
-	});
-});
